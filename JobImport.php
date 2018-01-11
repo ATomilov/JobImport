@@ -43,10 +43,20 @@ final class JobImport_plugin {
 			// register_deactivation_hook( __FILE__,  array( $this, 'deactivatePlugin' ) );	
 	
 		// Actions
-			// add_action( 'admin_init', array( $this, 'registerSettingsFields' ) );
+			add_action( 'admin_init', array( $this, 'registerSettingsFields' ) );
 			add_action( 'admin_menu', array( $this, 'addMenuItem' ) );
 			// add_action( 'admin_enqueue_scripts', array( $this, 'adminEnqueueFiles' ) );
 		}
+
+	/**
+	 * 
+	 * Register settings fields for Export Settings Page
+	 * Initilize Callback method for CRON
+	 * 
+	 */
+	public function registerSettingsFields() {
+		register_setting( 'selectedPostTypes_group', 'selectedPostTypes' );
+	}
 
   /**
 	 * Add Item In Admin Menu.
