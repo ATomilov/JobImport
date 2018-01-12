@@ -1,0 +1,16 @@
+.post-types-list li {
+  display: inline-block;
+  margin-right: 1em;
+}
+.api-credentials-fields label {
+  display: inline-block;
+  font-style: italic;
+  margin: 5px 0;
+}
+.api-credentials-fields input[type="text"],
+.api-credentials-fields input[type="password"] {
+  display: block;
+}
+.single-field {
+  display: inline-block;
+}
