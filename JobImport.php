@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-final class JobImport_plugin {
+final class tlj_JobImport_plugin {
 	/**
 	 * Plugin version
 	 * @var string
@@ -29,7 +29,7 @@ final class JobImport_plugin {
 	 */
 	public function __construct() {
 		$this->init_hooks();
-		// $this->includesFiles();
+		$this->includesFiles();
 		// $this->initDefinesConstants();
 	}
 
@@ -39,7 +39,7 @@ final class JobImport_plugin {
 	 */
 	private function init_hooks() {
 		// Plugin actions
-			// register_activation_hook( __FILE__, array( $this, 'installPlugin' ) );
+			register_activation_hook( __FILE__, array( $this, 'installPlugin' ) );
 			register_deactivation_hook( __FILE__,  array( $this, 'deactivatePlugin' ) );	
 	
 		// Actions
@@ -51,6 +51,16 @@ final class JobImport_plugin {
 		}
 
 	/**
+	 * Include required core files.
+	 */
+	public function includesFiles() {
+		include_once( $this->plugin_path().'/include/classes/class_tlj_WSSEAuth.php' );
+		include_once( $this->plugin_path().'/include/classes/class_tlj_WSSEToken.php' );
+		include_once( $this->plugin_path().'/include/classes/class_tlj_Auth_and_Token.php' );
+		include_once( $this->plugin_path().'/include/classes/class_tlj_Soap.php' );
+	}
+
+	/**
 	 * 
 	 * Register settings fields for Export Settings Page
 	 * Initilize Callback method for CRON
@@ -59,6 +69,25 @@ final class JobImport_plugin {
 	public function registerSettingsFields() {
 		register_setting( 'selectedPostTypes_group', 'selectedPostTypes' );
 		register_setting( 'apiCredentials_group', 'apiCredentials' );
+		register_setting( 'idTalentlinkJob_group', 'idTalentlinkJob' );
+	}
+
+	/**
+	 * 
+	 * Install Plugin Hook.
+	 * Create Files and Folders for export files.
+	 * 
+	 */
+	public static function installPlugin() {
+		if ( ! current_user_can( 'activate_plugins' ) )
+			return;
+
+		$posts_ids = array_values( get_posts( array(
+			'fields'          => 'ids',
+			'posts_per_page'  => -1,
+			'post_type'       => 'job'
+		) ) );
+		update_option( 'idTalentlinkJob', $posts_ids );
 	}
 
 	/**
@@ -72,6 +101,7 @@ final class JobImport_plugin {
 			return;
 		delete_option( 'selectedPostTypes' );
 		delete_option( 'apiCredentials' );
+		delete_option( 'idTalentlinkJob' );
 	}
 
 /**
@@ -143,4 +173,4 @@ public function adminEnqueueFiles() {
 	}
 	
 }
-new JobImport_plugin();
+new tlj_JobImport_plugin();

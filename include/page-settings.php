@@ -66,5 +66,8 @@ if ( !empty( $options_api ) ) :
   $options_api = array_values( $options_api );
 print_r( $options_api );
 endif;
+print_r( get_option( 'idTalentlinkJob' ) );
+$client = new SoapClient("https://api3.lumesse-talenthub.com/HRIS/SOAP/Position?WSDL");
+print_r($client->__getFunctions());
 ?>
 </div>	
