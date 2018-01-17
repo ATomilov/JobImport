@@ -57,7 +57,10 @@ final class tlj_JobImport_plugin {
 		include_once( $this->plugin_path().'/include/classes/class_tlj_WSSEAuth.php' );
 		include_once( $this->plugin_path().'/include/classes/class_tlj_WSSEToken.php' );
 		include_once( $this->plugin_path().'/include/classes/class_tlj_Auth_and_Token.php' );
-		include_once( $this->plugin_path().'/include/classes/class_tlj_Soap.php' );
+		include_once( $this->plugin_path().'/include/classes/class_tlj_SoapClient.php' );
+		include_once( $this->plugin_path().'/include/classes/class_defaultSoap.php' );
+		include_once( $this->plugin_path().'/include/classes/class_tlj_Queries.php' );
+		include_once( $this->plugin_path().'/include/classes/requests/class_getAdvertisementById.php' );
 	}
 
 	/**

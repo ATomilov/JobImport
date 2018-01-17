@@ -66,8 +66,14 @@ if ( !empty( $options_api ) ) :
   $options_api = array_values( $options_api );
 print_r( $options_api );
 endif;
-print_r( get_option( 'idTalentlinkJob' ) );
-$client = new SoapClient("https://api3.lumesse-talenthub.com/HRIS/SOAP/Position?WSDL");
-print_r($client->__getFunctions());
+// print_r( get_option( 'idTalentlinkJob' ) );
+// $client = new SoapClient("https://api3.lumesse-talenthub.com/HRIS/SOAP/Position?WSDL");
+// print_r($client->__getFunctions());
+$test_query = new tlj_Queries;
+var_dump($test_query->get_Advertisement(1, "HU"));
+var_dump(new getAdvertisementById(1,"HU"));
+// $build_header = new tlj_Auth_and_Token( 'THubUser', 'Password1234', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd' );
+// var_dump($build_header->getHeader());
+
 ?>
 </div>	
