@@ -44,7 +44,7 @@
     </div>
     <div class="single-field">
       <label for="api-password" class="password">Password
-        <input type="password" name="apiCredentials[password]" id="api-password" value="<?php echo esc_attr( $options_api['password'] ); ?>" required>
+        <input type="password" name="apiCredentials[pwd]" id="api-password" value="<?php echo esc_attr( $options_api['pwd'] ); ?>" required>
       </label>
     </div>
     <div class="single-field">
@@ -70,7 +70,7 @@ endif;
 // $client = new SoapClient("https://api3.lumesse-talenthub.com/HRIS/SOAP/Position?WSDL");
 // print_r($client->__getFunctions());
 $test_query = new tlj_Queries;
-var_dump($test_query->get_Advertisement(1, "HU"));
+var_dump($test_query->getAdvertisementById(1));
 var_dump(new getAdvertisementById(1,"HU"));
 // $build_header = new tlj_Auth_and_Token( 'THubUser', 'Password1234', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd' );
 // var_dump($build_header->getHeader());
