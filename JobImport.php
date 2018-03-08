@@ -45,28 +45,31 @@ final class tlj_JobImport_plugin {
 		// Actions
 			add_action( 'admin_init', array( $this, 'registerSettingsFields' ) );
 			add_action( 'admin_menu', array( $this, 'addMenuItem' ) );
-			add_action( 'add_meta_boxes', array( $this, 'add_custom_meta_boxes' ) );
+			add_action( 'add_meta_boxes', array( $this, 'addCustomMetaBoxes' ) );
 			// add_action( 'edit_form_after_title',  array( $this, 'move_metabox_after_title' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'adminEnqueueFiles' ) );
+			add_action( 'wp_enqueue_scripts', array( $this, 'includeFrontJs' ) );
 		}
 
 	/**
 	 * Include required core files.
 	 */
 	public function includesFiles() {
-		include_once( $this->plugin_path().'/include/classes/class_tlj_WSSEAuth.php' );
-		include_once( $this->plugin_path().'/include/classes/class_tlj_WSSEToken.php' );
-		include_once( $this->plugin_path().'/include/classes/class_tlj_Auth_and_Token.php' );
-		include_once( $this->plugin_path().'/include/classes/class_tlj_SoapClient.php' );
+		include_once( $this->plugin_path().'/include/classes/class-tlj-WSSEAuth.php' );
+		include_once( $this->plugin_path().'/include/classes/class-tlj-WSSEToken.php' );
+		include_once( $this->plugin_path().'/include/classes/class-tlj-Auth-and-Token.php' );
+		include_once( $this->plugin_path().'/include/classes/class-tlj-soapClient.php' );
 		// include_once( $this->plugin_path().'/include/classes/class_defaultSoap.php' );
-		include_once( $this->plugin_path().'/include/classes/class_tlj_Queries.php' );
-		include_once( $this->plugin_path().'/include/classes/requests/class_getAdvertisementById.php' );
+		include_once( $this->plugin_path().'/include/classes/class-tlj-queries.php' );
+		include_once( $this->plugin_path().'/include/classes/requests/class-getAdvertisementById.php' );
+		// include_once( $this->plugin_path().'/include/classes/requests/create-request.php' );
+		include_once( $this->plugin_path().'/include/classes/class-tlj-main.php' );
 	}
 
 	/**
 	 * 
-	 * Register settings fields for Export Settings Page
-	 * Initilize Callback method for CRON
+	 * Register settings fields for Import Settings Page
+	 * 
 	 * 
 	 */
 	public function registerSettingsFields() {
@@ -78,7 +81,6 @@ final class tlj_JobImport_plugin {
 	/**
 	 * 
 	 * Install Plugin Hook.
-	 * Create Files and Folders for export files.
 	 * 
 	 */
 	public static function installPlugin() {
@@ -91,6 +93,14 @@ final class tlj_JobImport_plugin {
 			'post_type'       => 'job'
 		) ) );
 		update_option( 'idTalentlinkJob', $posts_ids );
+
+		$apiCredentials = array(
+			'username' => 'THubUser',
+			'pwd' => 'Password1234',
+			'api_key' => 'dabc4dvptajdnrhwnqsf6dnz',
+			'url_web_service' => 'https://api3.lumesse-talenthub.com'
+		);
+		update_option( 'apiCredentials', $apiCredentials );
 	}
 
 	/**
@@ -111,7 +121,7 @@ final class tlj_JobImport_plugin {
  * Add Meta Box
  * 
  */
-public function add_custom_meta_boxes(){
+public function addCustomMetaBoxes(){
 	$options = array_values( get_option( 'selectedPostTypes' ) );
 	if ( !empty( $options ) ) : 
 			add_meta_box( 'job_import_meta_box', __( 'Main information', 'jobimport_plugin' ), array ($this, 'build_meta_box'), $options, 'side', 'high' );
@@ -140,12 +150,24 @@ function build_meta_box() {
  * 
  */
 public function adminEnqueueFiles() {
-	wp_enqueue_style( 'JI-style.css', $this->plugin_url('/assets/main.css') );
+	wp_enqueue_style( 'JI-style.css', $this->plugin_url('/assets/css/main.css') );
+	// Script
+	wp_enqueue_script( 'jquery' );
+	// wp_enqueue_script( 'main', $this->plugin_url('/assets/js/main.js'), array( 'jquery' ) );
+}
+
+public function includeFrontJs() {
+	wp_enqueue_script( 'main', $this->plugin_url('/assets/js/main.js'), array( 'jquery' ) );
+	wp_localize_script( 'main', 'tljJobImport', array(
+		'ajaxurl' => admin_url( 'admin-ajax.php' ),
+		'id' => 1,
+//		'noncefield'	=> wp_create_nonce('cj-export-nonce')
+	));
 }
 
   /**
 	 * Add Item In Admin Menu.
-	 * 
+	 *
 	 */
 	public function addMenuItem() {
 		add_submenu_page( 'tools.php', 'Job Import Settings', 'Job Import', 'manage_options', 'jobimport',  array( $this, 'renderPage' ) );

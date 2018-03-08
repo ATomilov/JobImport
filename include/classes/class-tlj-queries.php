@@ -15,24 +15,24 @@ class tlj_Queries extends tlj_soapClient {
 	function __construct() {
 		$config = get_option('apiCredentials');
 		$this->client = new tlj_soapClient( $config );
-
 	}
 
 
 
 	public function getAdvertisementById( $id ) {
 		try {
-			$this->client->init_client($this->_wsEndPoints['FoAdvert']);
-			$result = $this->client->call('getAdvertisementById', array(
+			$this->client->init_client( $this->_wsEndPoints['FoAdvert'] );
+			// var_dump($this->client);
+			$result = $this->client->call( 'getAdvertisementById', array(
 				'postingTargetId' => $id,
 				'langCode'		  => 'UK'
-			));	
+			) );	
 
 
 			return $result;
 			
-		} catch (Exception $e) {
-			return new WP_Error( '101', $e->getMessage());			
+		} catch ( Exception $e ) {
+			return new WP_Error( '101', $e->getMessage() );			
 		}
 	}
 }
